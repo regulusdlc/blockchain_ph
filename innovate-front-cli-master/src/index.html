@@ -24,28 +24,33 @@
 		const rpc = new eosjs_jsonrpc.JsonRpc('http://65.52.186.97:8888');
 		const signatureProvider = new eosjs_jssig.JsSignatureProvider([defaultPrivateKey]);
 		const api = new eosjs_api.Api({ rpc, signatureProvider});
+		const accountToken = "fis.token"; //eosio.token
 
 		//hard variables
 		const merchants = [
 			{
 				"merchant_name": "Palawan Express",
-				"merchant_code": "PAL",
+				"merchant_code": "pal",
 				"exchange_rates": [
 					{"exchange_rate_name": "SYS/PHP", "rate": 0.02},
-					{"exchange_rate_name": "PHP/SYS", "rate": 50}
+					{"exchange_rate_name": "PHP/SYS", "rate": 50},
+					{"exchange_rate_name": "FIS/PHP", "rate": 0.02},
+					{"exchange_rate_name": "PHP/FIS", "rate": 50}
 				]
 			},
 			{
 				"merchant_name": "Cebuana Lhuiller",
-				"merchant_code": "CEB",
+				"merchant_code": "ceb",
 				"exchange_rates": [
 					{"exchange_rate_name": "SYS/PHP", "rate": 0.0192307692307692},
-					{"exchange_rate_name": "PHP/SYS", "rate": 52}
+					{"exchange_rate_name": "PHP/SYS", "rate": 52},
+					{"exchange_rate_name": "FIS/PHP", "rate": 0.0192307692307692},
+					{"exchange_rate_name": "PHP/FIS", "rate": 52}
 				]
 			}
 		];
 		const currencies = [
-			{ "curreny_code": "SYS"},{"curreny_code": "PHP"}
+			{"curreny_code": "PHP"},{"curreny_code": "FIS"}
 		];
 	</script> 
 </head>

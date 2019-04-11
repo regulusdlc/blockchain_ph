@@ -5,6 +5,7 @@ import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { CustRegisterComponent } from './custregister';
 import { TransferCoinComponent } from './transfer-coin/transfer-coin.component';
+import { ConveryCurrencyComponent } from './convery-currency/convery-currency.component';
 import { DisplaybalComponent } from './displaybal/displaybal.component';
 import { AuthGuard } from './_guards';
 
@@ -15,8 +16,9 @@ const appRoutes: Routes = [
     { path: 'custregister', component: CustRegisterComponent, canActivate: [AuthGuard] },
     { path: 'displaybal', component: DisplaybalComponent, canActivate: [AuthGuard] },
     { path: 'transfer-coin', component: TransferCoinComponent, canActivate: [AuthGuard] },
+    { path: 'convery-currency', component: ConveryCurrencyComponent, canActivate: [AuthGuard] },
     // otherwise redirect to home
-    { path: '**', redirectTo: '' }
+    { path: '**', redirectTo: '' } 
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

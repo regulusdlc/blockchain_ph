@@ -35,7 +35,7 @@
     <div class="form-group">
         <label for="transferMerchant">Merchant</label>
         <select  formControlName="transferMerchant" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.transferMerchant.errors }" (change)="calculateAmountToSend()">
-            <option *ngFor="let merchant of myMerchants" value="{{merchant.merchant_code}}">{{merchant.merchant_name}}</option>
+            <option *ngFor="let merchant of myMerchants" value="{{merchant.merchant_code}}">{{merchant.merchant_name}}</option> 
         </select>
         <div *ngIf="submitted && f.transferMerchant.errors" class="invalid-feedback">
             <div *ngIf="f.transferMerchant.errors.required">Merchant is required</div>
@@ -55,7 +55,7 @@
                 <div *ngIf="submitted && f.transferCurrencyTo.errors" class="invalid-feedback">
                     <div *ngIf="f.transferCurrencyTo.errors.required">Currency is required</div>
                 </div>
-            </div>
+            </div> 
         </div> 
     </div>
 

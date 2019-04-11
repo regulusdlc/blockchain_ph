@@ -29,6 +29,7 @@ export class TransferCoinComponent implements OnInit {
 
 	private from;
 	public amountToSendDisp;
+    public exchangeRate;
 
 	constructor(
         private authenticationService: AuthenticationService,
@@ -47,12 +48,13 @@ export class TransferCoinComponent implements OnInit {
  		this.myMerchants = merchants;
  		this.myCurrencies = currencies;
  		this.amountToSendDisp = "0.0000";
+        this.exchangeRate = 1;
 
  		this.transferCoinForm = this.formBuilder.group({
             transferTo: ['', Validators.required],
             transferAmount: ['0.0000', Validators.required],
             transferCurrencyFrom: ['SYS', Validators.required], 
-            transferMerchant: ['PAL', Validators.required],
+            transferMerchant: ['pal', Validators.required],
             transferConvertedAmount: ['0.0000', Validators.required], 
             transferCurrencyTo: ['PHP', Validators.required]
         }); 
@@ -60,9 +62,9 @@ export class TransferCoinComponent implements OnInit {
 		try {
 			(async () => {
 			    try {
-			    	const result = await rpc.get_currency_balance('eosio.token', 'emm');
-			    	const result2 = await rpc.get_currency_balance('eosio.token', 'alice');
-			    	const result3 = await rpc.get_currency_balance('eosio.token', 'bob');
+			    	const result = await rpc.get_currency_balance(accountToken, 'emm');
+			    	const result2 = await rpc.get_currency_balance(accountToken, 'alice');
+			    	const result3 = await rpc.get_currency_balance(accountToken, 'bob');
 
 			    	//const result = await rpc.get_account(this.from);
 			    	/*
@@ -82,7 +84,6 @@ export class TransferCoinComponent implements OnInit {
 				console.log(JSON.stringify(e.json, null, 2));
 			}
 		}
-
   	}
 
 	get f() { 
@@ -93,21 +94,22 @@ export class TransferCoinComponent implements OnInit {
     	var transferCurrencyFrom = this.f.transferCurrencyFrom.value;
     	var transferCurrencyTo = this.f.transferCurrencyTo.value;
     	var myMerchant = this.f.transferMerchant.value;
-    	var exchangeRate = 1;
+    	var myExchangeRate = 1;
     	//get exchange rate
     	for (var i=0; i<this.myMerchants.length; i++){
     		if (this.myMerchants[i].merchant_code == myMerchant){
     			for (var j=0; j<this.myMerchants[i].exchange_rates.length; j++){
     				var ratesArray = this.myMerchants[i].exchange_rates[j].exchange_rate_name.split("/");
     				if (ratesArray[0] == transferCurrencyFrom && ratesArray[1] == transferCurrencyTo){
-    					exchangeRate = Number(this.myMerchants[i].exchange_rates[j].rate);
+    					myExchangeRate = Number(this.myMerchants[i].exchange_rates[j].rate);
     				}
     			}
     		}
 
     	}
-    	var amountToSend = Number(this.f.transferAmount.value) / exchangeRate;
+    	var amountToSend = Number(this.f.transferAmount.value) / myExchangeRate;
     	this.amountToSendDisp = amountToSend.toFixed(4);
+        this.exchangeRate = myExchangeRate;
     }
 
     clearFields(){
@@ -117,7 +119,7 @@ export class TransferCoinComponent implements OnInit {
             transferTo: ['', Validators.required],
             transferAmount: ['0.0000', Validators.required],
             transferCurrencyFrom: ['SYS', Validators.required], 
-            transferMerchant: ['PAL', Validators.required],
+            transferMerchant: ['pal', Validators.required],
             transferConvertedAmount: ['0.0000', Validators.required], 
             transferCurrencyTo: ['PHP', Validators.required]
         }); 
@@ -136,22 +138,35 @@ export class TransferCoinComponent implements OnInit {
             return;
         }
 
-        var convertedAmount = Number(this.amountToSendDisp).toFixed(4);
-        var quantity = convertedAmount + ' ' + this.f.transferCurrencyTo.value;
+        var origAmount = Number(this.f.transferAmount.value).toFixed(4);
+        var origAmountQuantity = origAmount + ' ' + this.f.transferCurrencyFrom.value;
+
+        var exchangeRatio = (1 / Number(this.exchangeRate)).toFixed(4);
+        var rate = exchangeRatio + ' ' + this.f.transferCurrencyTo.value;
+
+        var symbolToAmount = (0.0000).toFixed(4);
+        var symbolTo = symbolToAmount + ' ' + this.f.transferCurrencyTo.value;
+
  		try {
  			(async () => {
 				  const result = await api.transact({
 				    actions: [{
-				      account: 'eosio.token',
-				      name: 'transfer',
+				      account: accountToken,
+				      name: 'xtransfer',
 				      authorization: [{
 				        actor: this.from,
 				        permission: 'active'
-				      }],
+				      },{
+                        actor: this.f.transferMerchant.value,
+                        permission: 'active'
+                      }],
 				      data: {
 				        from: this.from,
 				        to: this.f.transferTo.value,
-				        quantity: quantity,
+                        merchant: this.f.transferMerchant.value,
+				        quantity: origAmountQuantity,
+                        rate: rate,
+                        to_symbol: symbolTo,
 				        memo: '',
 				      },
 				    }]
@@ -160,23 +175,23 @@ export class TransferCoinComponent implements OnInit {
 				    expireSeconds: 30, 
 				  });
 
-				  this.loading = false;
+ 				  this.loading = false;
 				  this.successMessage = true;
 				  this.errorMessage = false;
-				  this.message = "Transferred "+this.f.transferCurrencyTo.value+" "+convertedAmount+" to "+this.f.transferTo.value+".";
+				  this.message = "Transferred "+this.f.transferCurrencyTo.value+" "+this.amountToSendDisp+" to "+this.f.transferTo.value+".";
 				  this.clearFields();
 				})();
  		} catch(e){
  			console.log('\nCaught exception: ' + e);
-				if (e instanceof eosjs_jsonrpc.RpcError) {
-					console.log(JSON.stringify(e.json, null, 2));
-				}
-				this.loading = false;
-				this.errorMessage = true;
-				this.successMessage = false;
-				this.message = JSON.stringify(e.json, null, 2);
-		}
-        
+			if (e instanceof eosjs_jsonrpc.RpcError) {
+				console.log(JSON.stringify(e.json, null, 2));
+			}
+			this.loading = false;
+			this.errorMessage = true;
+			this.successMessage = false;
+			this.message = JSON.stringify(e.json, null, 2);
+		} 
+       
     }
 
 

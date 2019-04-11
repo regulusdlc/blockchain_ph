@@ -17,7 +17,8 @@ import { RegisterComponent } from './register';
 import { CustRegisterComponent } from './custregister';
 
 import { DisplaybalComponent } from './displaybal/displaybal.component';
-import { TransferCoinComponent } from './transfer-coin/transfer-coin.component';
+import { TransferCoinComponent } from './transfer-coin/transfer-coin.component';;
+import { ConveryCurrencyComponent } from './convery-currency/convery-currency.component'
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { TransferCoinComponent } from './transfer-coin/transfer-coin.component';
         RegisterComponent,
         CustRegisterComponent,
         DisplaybalComponent,
-        TransferCoinComponent
+        TransferCoinComponent,
+        ConveryCurrencyComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

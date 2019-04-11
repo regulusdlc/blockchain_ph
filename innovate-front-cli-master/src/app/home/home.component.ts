@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         var result;
         (async () => {
             try {
-              result = await rpc.get_currency_balance('eosio.token', this.currentUser.username);
+              result = await rpc.get_currency_balance(accountToken, this.currentUser.username);
               console.log(result);
 
               var wallets = Array.from(result);

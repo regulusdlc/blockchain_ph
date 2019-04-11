@@ -1,0 +1,60 @@
+<h2>Convert</h2>
+<div *ngIf="successMessage" class="alert alert-success">
+  <strong>Success! </strong>{{message}}
+</div>
+<div  *ngIf="errorMessage" class="alert alert-danger">
+  <strong>Success! </strong>{{message}}
+</div>
+<form [formGroup]="convertCurrencyForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="transferAmount">Amount</label>
+        <div class="row">
+            <div class="col-sm-8">
+                <input id="transferAmount" type="text" formControlName="transferAmount" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.transferAmount.errors }" (change)="calculateAmountToSend()"/>
+                <div *ngIf="submitted && f.transferAmount.errors" class="invalid-feedback">
+                    <div *ngIf="f.transferAmount.errors.required">Amount is required</div> 
+                </div>
+            </div><span class="glyphicon glyphicon-pencil"></span>
+            <div class="col-sm-4">
+                <select formControlName="transferCurrencyFrom" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.transferCurrencyFrom.errors }" (change)="calculateAmountToSend()">
+                    <option *ngFor="let currency of myCurrencies" value="{{currency.curreny_code}}">{{currency.curreny_code}}</option>
+                </select>
+                <div *ngIf="submitted && f.transferCurrencyFrom.errors" class="invalid-feedback">
+                    <div *ngIf="f.transferCurrencyFrom.errors.required">Currency is required</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="transferMerchant">Merchant</label>
+        <select  formControlName="transferMerchant" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.transferMerchant.errors }" (change)="calculateAmountToSend()">
+            <option *ngFor="let merchant of myMerchants" value="{{merchant.merchant_code}}">{{merchant.merchant_name}}</option>
+        </select>
+        <div *ngIf="submitted && f.transferMerchant.errors" class="invalid-feedback">
+            <div *ngIf="f.transferMerchant.errors.required">Merchant is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="transferConvertedAmount">Converted Amount</label>
+        <div class="row">
+            <div class="col-sm-8">
+                <input type="hidden" formControlName="transferConvertedAmount" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.transferConvertedAmount.errors }" value="{{amountToSendDisp}}"/>
+                <h3>{{amountToSendDisp}}</h3>
+            </div>
+            <div class="col-sm-4">
+                <select formControlName="transferCurrencyTo" class="form-control" (change)="calculateAmountToSend()" [ngClass]="{ 'is-invalid': submitted && f.transferCurrencyTo.errors }">
+                    <option *ngFor="let currency of myCurrencies" value="{{currency.curreny_code}}">{{currency.curreny_code}}</option>
+                </select>
+                <div *ngIf="submitted && f.transferCurrencyTo.errors" class="invalid-feedback">
+                    <div *ngIf="f.transferCurrencyTo.errors.required">Currency is required</div>
+                </div>
+            </div> 
+        </div> 
+    </div>
+
+    <div class="form-group">
+        <button [disabled]="loading" class="btn btn-primary">Convert</button>
+        <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        <a routerLink="/home" class="btn btn-link">Cancel</a>
+    </div>
+</form>

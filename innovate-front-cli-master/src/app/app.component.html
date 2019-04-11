@@ -1,0 +1,35 @@
+﻿<!-- nav -->
+<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/welcome">TeamPH</a>
+    </div>
+    <div class="navbar-expand mr-auto">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" routerLink="/">Account Balance</a>
+            <a routerLink="/transfer-coin" class="nav-item nav-link">Transfer</a>
+            <a class="nav-item nav-link" href="#">Withdrawal</a>
+            <a class="nav-item nav-link" href="#">Load</a>
+            <a class="nav-item nav-link" href="#">Send Payment</a>
+            <a class="nav-item nav-link" (click)="logout()">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<!-- main app container -->
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 offset-sm-3">
+                <alert></alert>
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- credits -->
+<div class="text-center">
+    <p>
+        <a href="https://bitbucket.fnis.com/projects/INNO19R/repos/team-ph/" target="_top">Team PH - Bitbucket Repository</a>
+    </p>
+</div>

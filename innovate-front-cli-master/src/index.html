@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <base href="/" />
+    <title>Team PH - Innovate48</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <style>
+        a { cursor: pointer }
+    </style>
+
+	<script> var global=window; </script> 
+
+	<pre style="width: 100%; height: 100%; margin:0px; "></pre>
+	<script src='assets/dist-web/eosjs-api.js'></script>
+	<script src='assets/dist-web/eosjs-jsonrpc.js'></script>
+	<script src='assets/dist-web/eosjs-jssig.js'></script>
+	<script src='assets/dist-web/text-encoding/lib/encoding.js'></script>
+	<script src='assets/dist-web/text-encoding/lib/encoding-indexes.js'></script>
+	<script>
+		let pre = document.getElementsByTagName('pre')[0]; 
+		const defaultPrivateKey = "5J4cth7b3BWZEjqY5rMfCACfADvB7MSmvo29iCo8cGDcWKPs7tD";
+		const defaultPublicKey  =   "EOS8i1CXTY4Sz39XaQWX2RpccsCZ1nWM3w9zRhjCFChdci2Y65ck4"; 
+		const rpc = new eosjs_jsonrpc.JsonRpc('http://65.52.186.97:8888');
+		const signatureProvider = new eosjs_jssig.JsSignatureProvider([defaultPrivateKey]);
+		const api = new eosjs_api.Api({ rpc, signatureProvider});
+
+		//hard variables
+		const merchants = [
+			{
+				"merchant_name": "Palawan Express",
+				"merchant_code": "PAL",
+				"exchange_rates": [
+					{"exchange_rate_name": "SYS/PHP", "rate": 0.02},
+					{"exchange_rate_name": "PHP/SYS", "rate": 50}
+				]
+			},
+			{
+				"merchant_name": "Cebuana Lhuiller",
+				"merchant_code": "CEB",
+				"exchange_rates": [
+					{"exchange_rate_name": "SYS/PHP", "rate": 0.0192307692307692},
+					{"exchange_rate_name": "PHP/SYS", "rate": 52}
+				]
+			}
+		];
+		const currencies = [
+			{ "curreny_code": "SYS"},{"curreny_code": "PHP"}
+		];
+	</script> 
+</head>
+<body>
+	<pre style="width: 100%; height: 100%; margin:0px; "></pre>
+    <app>Loading...</app>
+</body>
+</html>
